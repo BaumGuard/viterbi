@@ -1,3 +1,13 @@
+#include "viterbi.h"
+
+#define ASCII_OFFSET 48
+
+typedef struct viterbi_node {
+    int weight;
+    struct viterbi_node* father;
+    unsigned int state_dec;
+} viterbi_node;
+
 // A function for calculating the power of a number
 unsigned int power (unsigned int base, unsigned int exp) {
     int n=1;

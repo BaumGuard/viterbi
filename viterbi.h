@@ -5,8 +5,6 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
-#define ASCII_OFFSET 48
-
 
 /*---------------------------------------------------*/
 /*---------------- DATA STRUCTRES -------------------*/
@@ -88,6 +86,10 @@ enum operations {
     NON
 };
 
+// Pushing a bit into the shift register (used as function pointers)
+int push_bit_left (char* bit_seq, unsigned int bit);
+int push_bit_right (char* bit_seq, unsigned int bit);
+
 // RESULT
 // After decoding the convolutional code, the function viterbi_decode() returns
 // not only the decoded bit sequence but also the weight of the last node.
@@ -98,74 +100,6 @@ typedef struct {
   char* result;
   unsigned int weight;
 } viterbi_result;
-
-
-
-
-
-
-/*---------------------------------------------------*/
-/*-- INTERNALLY USED DATA STRUCTURES AND FUNCTIONS --*/
-
-// This data type is used for the decoding process of a bit sequence
-//  - weight:    The cummulative weight of the path through the Viterbi grid
-//               It is calculated using Hamming distances
-//  - father:    A pointer that points to the preceding Viterbi node
-//  - state_dec: Decimal representation of the bit sequence
-
-typedef struct viterbi_node {
-    int weight;
-    struct viterbi_node* father;
-    unsigned int state_dec;
-} viterbi_node;
-
-
-
-
-// A function for calculating the power of a number
-unsigned int power (unsigned int base, unsigned int exp);
-
-// A function for copying strings
-void string_copy (char* str1, char* str2);
-
-// A function for getting a substring
-char* substring (char* str, unsigned int start, unsigned int end);
-
-// Test if a given string is a bit sequence (consisting only of 0 and 1)
-bool is_bit_sequence (char* seq);
-
-// Check if a given number is a bit (0 or 1)
-bool is_bit (unsigned int n);
-
-// Converting a decimal number to a binary bit sequence
-char* dec_to_bin (unsigned int n, unsigned int num_bits);
-
-// Converting a binary bit sequence to a decimal number
-unsigned int bin_to_dec (char* bits);
-
-// Pushing a bit into the shift register from the left-hand side
-int push_bit_left (char* bit_seq, unsigned int bit);
-
-// Pushing a bit into the shift register from the right-hand side
-int push_bit_right (char* bit_seq, unsigned int bit);
-
-// Getting the hamming distance of two bit sequences
-// The hamming distance tells us how many bits differ when looking at one index at a time
-unsigned int hamming_distance (char* bit_seq1, char* bit_seq2);
-
-// Getting the input bit when transitioning from one state to another
-char get_register_input (trellis* tr, unsigned int src_state, unsigned int dest_state);
-
-// Getting the convolutional code of a bit sequence based on the encoders
-char* get_convolutional_code (char* state, encoder* enc, unsigned int num_encoders);
-
-
-
-
-
-
-/*-------------------------------------------------------------------*/
-//------------------------- USER FUNCTIONS --------------------------*/
 
 
 // Creating a trellis from an array of encoders and a push_bit function
@@ -220,6 +154,3 @@ char* convolutional_encode (char* seq, encoder* enc, int num_encoders, int state
 void create_encoder(encoder* enc, int operation, int num_bits, ...);
 
 void print_trellis (trellis* tr);
-
-
-#include "viterbi.c"
